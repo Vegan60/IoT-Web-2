@@ -16,7 +16,7 @@
   <!-- (Optional) Latest compiled and minified JavaScript translation files -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js"></script>
 
-  <link rel="stylesheet" href="/css/style.css">
+  <!--<link rel="stylesheet" href="/css/style.css"> -->
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -44,11 +44,12 @@
     <div class="row">
       <div class="col-md-6">
         <h2>Stats uniques</h2>
+        <div id="chart_div_left" style="height: 500px;"></div>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect01">Objet</label>
+            <label class="input-group-text" for="inputObjectSelect">Objet</label>
           </div>
-          <select class="custom-select" id="inputGroupSelect01">
+          <select class="custom-select" id="inputObjectSelect">
             <option selected>Objets...</option>
             <option value="1">id_1</option>
             <option value="2">id_2</option>
@@ -58,8 +59,12 @@
       </div>
       <div class="col-md-6">
         <h2>Stats globales</h2>
+        <div id="chart_div_right" style="height: 500px;"></div>
       </div>
     </div>
   </div>
 </body>
+<!-- Script pour les statistiques -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="js/statistiques.js"></script>
 </html>
