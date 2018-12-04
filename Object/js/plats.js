@@ -1,11 +1,11 @@
 let apiURL = "http://angelie-api.vq3mchzm7k.us-west-2.elasticbeanstalk.com"
 
-function getEntrees(){
+function getPlats(){
 	axios.get(apiURL + "/Food/").then(function (response) {
 		console.log(response.data);
 		let content = "";
 		for (let i = 0; i < response.data.objects.length; i++) {
-			if (response.data.objects[i].type === 1) {
+			if (response.data.objects[i].type === 2) {
 				console.log("hello");
 				content += `<div class="col-lg-4 col-md-6 mb-4">
               		<div class="card h-100">
@@ -41,4 +41,4 @@ function addOrder(){
 		console.log(error);
 	})
 }
-getEntrees();
+getPlats();

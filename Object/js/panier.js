@@ -23,6 +23,31 @@ function getOrder(){
     })
 }
 
+function pushOrder(){
+	axios.get(apiURL + "/Command/").then(function (response) {
+    	console.log(response.data);
+    	let current_order = false;
+    	for (let i = 0; i < response.data.objects.length; i++) {
+    		axios.get(apiURL + "/Command/" + response.data.objects[i].id +"/").then(function (response2) {
+    			if (response2.data.status === "Initialisée" && !current_order) {
+    				current_order = true;
+    				displayOrder(response2.data);
+    				axios.patch(apiURL + "/Command/" + response2.data.objects[i].id + "/", {status: "Commandée"}).then(function (response) {
+    					console.log(response);
+    					$('#here_button').addClass('disabled');
+    					$('#here_table').append("Commande Passée !");
+  					})
+  						.catch(function (error) {
+    						console.log(error);
+  					});
+    			}
+    		}).catch(function (error) {
+    			console.log(error);
+    		});
+    	}
+    })
+}
+
 function displayEmpty() {
 	let content = '<h4>Votre panier est vide.</h4>';
 	$('#here_table').append(content);
