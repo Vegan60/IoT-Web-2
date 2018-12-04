@@ -4,30 +4,29 @@ function getOrder(){
     axios.get(apiURL + "/Command/").then(function (response) {
     	console.log(response.data);
     	let current_order = false;
-    	for (let key in response.data.objects) {
-    		axios.get(apiURL + "/Command/" + response.data.objects[key].id +"/").then(function (response2) {
+    	for (let i = 0; i < response.data.objects.length; i++) {
+    		axios.get(apiURL + "/Command/" + response.data.objects[i].id +"/").then(function (response2) {
     			if (response2.data.status === "Initialisée" && !current_order) {
     				current_order = true;
-    				console.log("lol");
     				displayOrder(response2.data);
+    			}
+    			if (!current_order && ((i + 1) === response.data.objects.length)) {
+    				displayEmpty();
+    				createOrder();
     			}
     		}).catch(function (error) {
     			console.log(error);
     		})
     	}
-    	console.log(current_order);
-    	if (!current_order) {
-    		displayEmpty();
-    		createOrder();
-        }    	
     }).catch(function (error) {
     	console.log(error);
     })
 }
 
 function displayEmpty() {
-	let content = "<h4>Votre panier est vide.</h4>";
+	let content = '<h4>Votre panier est vide.</h4>';
 	$('#here_table').append(content);
+	$('#here_button').addClass('disabled');
 }
 
 function displayOrder(response) {
@@ -96,6 +95,7 @@ function displayOrder(response) {
 					</thead>
 					</table>`;
 		$('#here_table').append(content);
+		$('#here_button').addClass('active');
     	}).catch(function (error) {
     	console.log(error);
     	})
