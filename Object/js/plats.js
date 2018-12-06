@@ -38,7 +38,7 @@ function getPlats(){
 			if (response.data.objects[i].type === 2) {
 				content += `<div class="col-lg-4 col-md-6 mb-4">
               		<div class="card h-100">
-                		<a href="#" onclick="getItem(this.id)" id="` + response.data.objects[i].id + `"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
+                		<a href="#" onclick="getItem(this.id)" id="` + response.data.objects[i].id + `"><img class="card-img-top" src="media/plat_item.png" alt=""></a>
                 		<div class="card-body">
                   		<h4 class="card-title">
                     		<a href="#" onclick="getItem(this.id)" id="` + response.data.objects[i].id + `">`+ response.data.objects[i].nom +`</a>
