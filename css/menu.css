@@ -1,3 +1,9 @@
+body {
+  color:black;
+  background-color:white;
+  background:url('http://alquiforma.com/p/2018/05/powerpoint-restaurant-menu-template-luxury-food-menu-background-hd-for-restaurant-menu-background.jpg') no-repeat center fixed;
+}
+
 #menu_items
 {
   margin-top: 5px;
