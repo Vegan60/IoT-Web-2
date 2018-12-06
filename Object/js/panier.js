@@ -1,112 +1,120 @@
-let apiURL = "http://angelie-api.vq3mchzm7k.us-west-2.elasticbeanstalk.com"
+let apiURL = "http://angelie-api.vq3mchzm7k.us-west-2.elasticbeanstalk.com";
 
 function getOrder(){
     axios.get(apiURL + "/Command/").then(function (response) {
-    	console.log(response.data);
-    	let current_order = false;
-    	for (let i = 0; i < response.data.objects.length; i++) {
-    		axios.get(apiURL + "/Command/" + response.data.objects[i].id +"/").then(function (response2) {
-    			if (response2.data.status === "Initialisée" && !current_order) {
-    				current_order = true;
-    				displayOrder(response2.data);
-    			}
-    			if (!current_order && ((i + 1) === response.data.objects.length)) {
-    				displayEmpty();
-    				createOrder();
-    			}
-    		}).catch(function (error) {
-    			console.log(error);
-    		})
-    	}
+        console.log(response.data);
+        let current_order = false;
+        for (let i = 0; i < response.data.objects.length; i++) {
+            axios.get(apiURL + "/Command/" + response.data.objects[i].id +"/").then(function (response2) {
+                if (response2.data.status === "Initialisée" && !current_order) {
+                    current_order = true;
+                    displayOrder(response2.data);
+                }
+                if (!current_order && ((i + 1) === response.data.objects.length)) {
+                    displayEmpty();
+                    createOrder();
+                }
+            }).catch(function (error) {
+                console.log(error);
+            })
+        }
     }).catch(function (error) {
-    	console.log(error);
+        console.log(error);
     })
 }
 
 function pushOrder(){
-	axios.get(apiURL + "/Command/").then(function (response) {
-    	console.log(response.data);
-    	let current_order = false;
-    	for (let i = 0; i < response.data.objects.length; i++) {
-    		axios.get(apiURL + "/Command/" + response.data.objects[i].id +"/").then(function (response2) {
-    			if (response2.data.status === "Initialisée" && !current_order) {
-    				current_order = true;
-    				displayOrder(response2.data);
-    				axios.patch(apiURL + "/Command/" + response2.data.objects[i].id + "/", {status: "Commandée"}).then(function (response) {
-    					console.log(response);
-    					$('#here_button').addClass('disabled');
-    					$('#here_table').append("Commande Passée !");
-  					})
-  						.catch(function (error) {
-    						console.log(error);
-  					});
-    			}
-    		}).catch(function (error) {
-    			console.log(error);
-    		});
-    	}
+    axios.get(apiURL + "/Command/").then(function (response) {
+        console.log(response.data);
+        let current_order = false;
+        for (let i = 0; i < response.data.objects.length; i++) {
+            axios.get(apiURL + "/Command/" + response.data.objects[i].id +"/").then(function (response2) {
+                if (response2.data.status === "Initialisée" && !current_order) {
+                    current_order = true;
+                    axios.patch(apiURL + "/Command/" + response2.data.id + "/", {status: "Commandée"}).then(function (response) {
+                        console.log(response);
+                        $('#here_button').addClass('disabled');
+                        var x = document.getElementById("snackbar");
+                        x.className = "show";
+                        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+                    })
+                        .catch(function (error) {
+                            console.log(error);
+                    });
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
     })
 }
 
 function displayEmpty() {
-	let content = '<h4>Votre panier est vide.</h4>';
-	$('#here_table').append(content);
-	$('#here_button').addClass('disabled');
+    let content = '<h4>Votre panier est vide.</h4>';
+    $('#here_table').append(content);
+    $('#here_button').addClass('disabled');
 }
 
 function displayOrder(response) {
-	if (response.foods === "[]")
-		displayEmpty();
-	else {
-		let content = `<table class="table table-striped">
-					        <thead>
-					          <tr>
-						        <th>Produit</th>
-			                    <th>Quantité</th>
-			                    <th>Prix</th>
+    if (response.foods === "[]")
+        displayEmpty();
+    else {
+        let content = `<table class="table table-striped">
+                            <thead>
+                              <tr>
+                                <th>Produit</th>
+                                <th>Quantité</th>
+                                <th>Prix</th>
 		                      </tr>
 		                    </thead>
 		                    <tbody>`;
 		let total = 0.00;
-		let order;
-		let i = 0;
+		let order = new Array();
+		let z = 0;
 		let found = false;
+        response.foods = response.foods.slice(0, -1);
+        response.foods = response.foods.slice(1);
+        let order_food = response.foods.split(", ");
+        console.log(order_food);
  		axios.get(apiURL + "/Food/").then(function (response2) {
-    	for (let key in response2.data.objects) {
-    		for (let key2 in response.foods) {
-				if (key2 === key.nom) {
-					found = false;
-					for (let key3 in order) {
-						if (key3.nom === key2) {
-							key3.qte += 1;
-							found = true;
-						}
+    	    for (let i = 0; i < response2.data.objects.length; i++) {
+    		    for (let j = 0; j < order_food.length; j++) {
+				    if (order_food[j] === response2.data.objects[i].nom) {
+                        console.log("Hello");
+					    found = false;
+					    for (let k = 0; k < order.length; k++) {
+                            console.log("key3: " + order[k].nom);
+						    if (order[k].nom === order_food[j]) {
+							  order[k].qte += 1;
+							  found = true;
+						    }
 					}
 					if (!found) {
-						let food = {nom: key.nom, prix: key.prix, type: key.type, qte: 1};
-						order[i++] = food;
+						let food = {nom: response2.data.objects[i].nom, prix: response2.data.objects[i].prix, type: response2.data.objects[i].type, qte: 1};
+						order[z++] = food;
 					}
 				}
 			}
     	}
-    	for (let j = 0; j < i; j++) {
+        console.log(order);
+    	for (let j = 0; j < z; j++) {
     		if (order[j].type === 1) {
     			content += `<tr><td>` + order[j].nom + `</td><td>` + order[j].qte
-    			+ `</td><td>` + order[j].prix + `</td></tr>`;
+    			+ `</td><td>` + order[j].prix + `€</td></tr>`;
     			total += (order[j].prix * order[j].qte);
     		}
     	}
-    	for (let j = 0; j < i; j++) {
+    	for (let j = 0; j < z; j++) {
     		if (order[j].type === 2) {
     			content += `<tr><td>` + order[j].nom + `</td><td>` + order[j].qte
-    			+ `</td><td>` + order[j].prix + `</td></tr>`;
+    			+ `</td><td>` + order[j].prix + `€</td></tr>`;
     			total += (order[j].prix * order[j].qte);
     		}
     	}
-    	for (let j = 0; j < i; j++) {
+    	for (let j = 0; j < z; j++) {
     		if (order[j].type === 3) {
     			content += `<tr><td>` + order[j].nom + `</td><td>` + order[j].qte
-    			+ `</td><td>` + order[j].prix + `</td></tr>`;
+    			+ `</td><td>` + order[j].prix + `€</td></tr>`;
     			total += (order[j].prix * order[j].qte);
     		}
     	}
@@ -120,6 +128,7 @@ function displayOrder(response) {
 					</thead>
 					</table>`;
 		$('#here_table').append(content);
+        $('#here_button').removeClass('disabled');
 		$('#here_button').addClass('active');
     	}).catch(function (error) {
     	console.log(error);
