@@ -14,9 +14,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 
   <!-- (Optional) Latest compiled and minified JavaScript translation files -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js"></script>
+
 
   <link rel="stylesheet" href="css/menu.css">
+  <link rel="stylesheet" href="css/addMenu.css">
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -40,17 +41,17 @@
     </div>
   </nav>
   <div class="container">
-    <h1 class="text-center">Page d'ajout d'élément du menu</h1>
-    <form>
+    <h1 class="text-center">Page d'ajout d'élément au menu</h1>
+    <form id="addMenuItem">
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="inputTitle">Titre</label>
-          <input type="text" class="form-control" id="inputTitle" placeholder="Titre">
+          <label for="inputTitle">Nom du plat</label>
+          <input type="text" class="form-control" id="inputTitle" placeholder="nom">
         </div>
         <div class="form-group col-md-6">
-            <label for="inlineFormInputGroup">Price</label>
+            <label for="inlineFormInputPrice">Prix</label>
             <div class="input-group mb-2">
-              <input type="number" class="form-control" id="inlineFormInputGroup" placeholder="Price">
+              <input type="number" class="form-control" id="inlineFormInputPrice" placeholder="Price">
               <div class="input-group-append">
                 <div class="input-group-text">€</div>
               </div>
@@ -64,15 +65,18 @@
       <div class="form-group col-md-4">
         <label for="inputState">Catégorie</label>
         <select id="inputState" class="form-control">
-          <option selected>Choose...</option>
-          <option>Entrée</option>
-          <option>Plat</option>
-          <option>Dessert</option>
-          <option>Boisson</option>
+          <option selected>Choisissez...</option>
+          <option value="1">Entrée</option>
+          <option value="2">Plat</option>
+          <option value="3">Dessert</option>
+          <option value="4">Boisson</option>
         </select>
       </div>
       <button type="submit" class="btn btn-primary">Ajouter au menu</button>
     </form>
+    <div id="snackbar">Commande passée !</div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+  <script src="js/addMenu.js"></script>
 </body>
 </html>
